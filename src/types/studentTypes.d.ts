@@ -1,5 +1,5 @@
 type CourseGrades = {
-  assignmentWeights: Array<CourseGrade>;
+  assignmentWeights: AssignmentWeights;
   finalExamWeight: number;
 };
 
@@ -8,6 +8,8 @@ type CourseGrade = {
   weight: number;
   grade: number;
 };
+
+type AssignmentWeights = Array<CourseGrade>;
 
 type Student = {
   name: string;

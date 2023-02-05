@@ -2,12 +2,25 @@ const students: StudentManager = {};
 
 function calculateAverage(weights: CourseGrades): number {
   let average = 0;
+  const noFinalTotal = 100 - weights.finalExamWeight;
   for (const score of weights.assignmentWeights) {
     average += score.weight * score.grade;
   }
+  average /= noFinalTotal;
   return average;
 }
 
+function validateTotalWeight(weights: CourseGrades): boolean {
+  let total = 0;
+  for (const score of weights.assignmentWeights) {
+    total += score.weight;
+  }
+  total += weights.finalExamWeight;
+  if (total !== 100) {
+    return false;
+  }
+  return true;
+}
 function addStudent(newStudentData: NewStudentRequest): boolean {
   // Destructure the name and weights
   const { name, weights } = newStudentData;
@@ -40,4 +53,4 @@ function getStudent(studentName: string): Student | undefined {
   // Return the student's information (their name is the key for `students`)
 }
 
-export { students, addStudent, getStudent };
+export { students, addStudent, getStudent, validateTotalWeight };

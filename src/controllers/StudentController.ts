@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { students, addStudent, getStudent } from '../models/StudentsModel';
+import { students, getStudent, addStudent, validateTotalWeight } from '../models/StudentsModel';
 
 function getAllStudents(req: Request, res: Response): void {
   res.json(students);
@@ -7,11 +7,15 @@ function getAllStudents(req: Request, res: Response): void {
 
 function createNewStudent(req: Request, res: Response): void {
   console.log(`\nPOST api/students`);
-  console.log(req.body);
+  console.log(JSON.stringify(req.body, null, 2));
 
   const studentData = req.body as NewStudentRequest; // Assign `req.body` as a `NewStudentRequest`
 
   const didAddStudent = addStudent(studentData); // Call the `addStudent` function using the student's data
+  if (!validateTotalWeight(studentData.weights)) {
+    res.sendStatus(400); // 400 Bad Request - The weight total is not 100
+    return;
+  }
 
   if (!didAddStudent) {
     // If the student's data was not added successfully
@@ -27,11 +31,11 @@ function getStudentByName(req: Request, res: Response): void {
   const student = getStudent(studentName); // get the student's data using function imported from StudentModel
 
   if (!student) {
+    console.log(`\n${studentName} was not in the dataset.`);
     // If `student` is undefined
     res.sendStatus(404); // respond with status 404 (Which means 404 Not Found)
     return; // return immediately
   }
-
   res.json(student); // Respond with the student's information as json
 }
 
