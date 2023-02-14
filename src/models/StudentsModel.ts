@@ -53,4 +53,77 @@ function getStudent(studentName: string): Student | undefined {
   // Return the student's information (their name is the key for `students`)
 }
 
-export { students, addStudent, getStudent, validateTotalWeight };
+function calculateFinalExamScore(
+  currentAverage: number,
+  finalExamWeight: number,
+  targetScore: number
+): number {
+  // TODO: Calculate the final exam score needed to get the targetScore in the class
+  const score =
+    (targetScore - currentAverage * (1 - finalExamWeight * 0.01)) / (finalExamWeight * 0.01);
+  return score;
+}
+
+function getLetterGrade(score: number): string {
+  // TODO: Return the appropriate letter grade
+  if (score >= 90) {
+    return 'A';
+  }
+  if (score >= 80) {
+    return 'B';
+  }
+  if (score >= 70) {
+    return 'C';
+  }
+  if (score >= 60) {
+    return 'D';
+  }
+  if (score > 100 || score < 0) {
+    return 'Invalid Score';
+  }
+  return 'F';
+}
+
+function updateStudentGrade(
+  studentName: string,
+  assignmentName: string,
+  newGrade: number
+): boolean {
+  // TODO: Get the student's data from the dataset
+  const student = getStudent(studentName);
+  // TODO: If the student was not found
+  // TODO: return false
+  if (!student) {
+    console.log(`\n${student} was not in the dataset.`);
+    return false;
+  }
+
+  const assignment = student.weights.assignmentWeights.find(
+    (assignmentWeight) => assignmentWeight.name === assignmentName
+  ); // TODO: Search the student's `assignmentWeights` and find the assignment with the matching name using the .find() method
+
+  // TODO: If the assignment was not found
+  // TODO: return false
+  if (!assignment) {
+    console.log(`\n${assignment} was not in the dataset.`);
+    return false;
+  }
+
+  // TODO: Set the assignment's grade to the newGrade
+  assignment.grade = newGrade;
+
+  // TODO: Then recalculate the student's currentAverage
+  student.currentAverage = calculateAverage(student.weights);
+
+  // TODO: return true since the update completed successfully
+  return true;
+}
+export {
+  students,
+  addStudent,
+  getStudent,
+  validateTotalWeight,
+  calculateFinalExamScore,
+  getLetterGrade,
+  updateStudentGrade,
+};
